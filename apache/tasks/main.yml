@@ -1,0 +1,28 @@
+- name: install httpd
+  yum: 
+     name: "{{ web }}"
+     state: installed
+
+
+- name: start service
+  service: 
+       name: "{{ web }}"
+       state: started 
+
+- name: create root 
+  file: 
+     path: "{{ web_root }}"
+     state: directory 
+
+- name: copy source code
+  copy: 
+       src: code/
+       dest: "{{ web_root }}"
+
+- include_vars: abc.yml
+           
+- name: copy jinja file 
+  template: 
+         src: web.conf.j2
+         dest: "{{ web_conf }}"
+  notify: restart_apache
